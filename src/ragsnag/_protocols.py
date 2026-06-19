@@ -8,7 +8,6 @@ from ragsnag._models import (
     GeneratorOutput,
     LoopIteration,
     ReformulationOutput,
-    ReformulationStrategy,
 )
 
 
@@ -45,7 +44,9 @@ class Retriever(Protocol):
 
             def retrieve(self, query: str, top_k: int = 5) -> list[Chunk]:
                 vector = self._embed(query)
-                results = self._index.query(vector=vector, top_k=top_k, include_metadata=True)
+                results = self._index.query(
+                    vector=vector, top_k=top_k, include_metadata=True
+                )
                 return [
                     Chunk(
                         content=match.metadata["text"],
@@ -56,8 +57,7 @@ class Retriever(Protocol):
                 ]
     """
 
-    def retrieve(self, query: str, top_k: int = 5) -> list[Chunk]:
-        ...
+    def retrieve(self, query: str, top_k: int = 5) -> list[Chunk]: ...
 
 
 @runtime_checkable
@@ -98,8 +98,7 @@ class Generator(Protocol):
                 return GeneratorOutput(answer=answer, confidence=confidence)
     """
 
-    def generate(self, query: str, chunks: list[Chunk]) -> GeneratorOutput:
-        ...
+    def generate(self, query: str, chunks: list[Chunk]) -> GeneratorOutput: ...
 
 
 @runtime_checkable
@@ -150,8 +149,7 @@ class Evaluator(Protocol):
 
     def evaluate(
         self, query: str, chunks: list[Chunk], answer: str
-    ) -> EvaluationResult:
-        ...
+    ) -> EvaluationResult: ...
 
 
 @runtime_checkable
@@ -193,7 +191,9 @@ class Reformulator(Protocol):
                 self, original_query: str, history: list[LoopIteration]
             ) -> ReformulationOutput:
                 last_reason = history[-1].evaluation.reason
-                new_query = call_llm(build_reformulation_prompt(original_query, history))
+                new_query = call_llm(
+                    build_reformulation_prompt(original_query, history)
+                )
                 return ReformulationOutput(
                     queries=[new_query],
                     strategy=ReformulationStrategy.EXPAND,
@@ -203,5 +203,4 @@ class Reformulator(Protocol):
 
     def reformulate(
         self, original_query: str, history: list[LoopIteration]
-    ) -> ReformulationOutput:
-        ...
+    ) -> ReformulationOutput: ...

@@ -64,7 +64,8 @@ class EvaluationResult(BaseModel):
                      this against LoopConfig.confidence_threshold to decide
                      whether to stop. A typical scoring guide:
                        1.0 — grounded and complete
-                       0.7 — grounded but incomplete, or complete but partially hallucinated
+                       0.7 — grounded but incomplete, or complete but partially
+                              hallucinated
                        0.3 — partially grounded, missing key information
                        0.0 — not grounded, wrong answer, or evaluator failed
         reason:      One sentence explaining the score. The Reformulator reads
@@ -74,12 +75,8 @@ class EvaluationResult(BaseModel):
                      asks about international orders specifically."
     """
 
-    is_grounded: bool = Field(
-        description="Answer is supported by the retrieved chunks"
-    )
-    is_complete: bool = Field(
-        description="Answer fully addresses the question"
-    )
+    is_grounded: bool = Field(description="Answer is supported by the retrieved chunks")
+    is_complete: bool = Field(description="Answer fully addresses the question")
     score: float = Field(ge=0.0, le=1.0)
     reason: str = Field(description="Why this score was assigned")
 
@@ -103,7 +100,8 @@ class ReformulationStrategy(str, Enum):
         Split a multi-part question into separate sub-queries, run each
         independently, then merge all retrieved chunks before generating.
         Use when one query can't cover two distinct topics at once.
-        Example: "pricing and billing cycle" → ["pricing tiers", "billing annual monthly"]
+        Example: "pricing and billing cycle"
+              → ["pricing tiers", "billing annual monthly"]
 
     STEP_BACK:
         Ask a broader, more general version of the question first. Use when
@@ -128,11 +126,11 @@ class ReformulationStrategy(str, Enum):
         Example: "how to cancel" → "account termination close subscription"
     """
 
-    EXPAND            = "expand"
-    NARROW            = "narrow"
-    DECOMPOSE         = "decompose"
-    STEP_BACK         = "step_back"
-    HYDE              = "hyde"
+    EXPAND = "expand"
+    NARROW = "narrow"
+    DECOMPOSE = "decompose"
+    STEP_BACK = "step_back"
+    HYDE = "hyde"
     PERSPECTIVE_SHIFT = "perspective_shift"
 
 
@@ -209,10 +207,10 @@ class StopReason(str, Enum):
         propagate directly. Reserved for future error-handling extensions.
     """
 
-    CONVERGED      = "converged"
+    CONVERGED = "converged"
     MAX_ITERATIONS = "max_iterations"
     HUMAN_APPROVED = "human_approved"
-    ERROR          = "error"
+    ERROR = "error"
 
 
 class LoopResult(BaseModel):

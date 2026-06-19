@@ -5,7 +5,6 @@ from collections.abc import Callable
 
 from ragsnag._models import Chunk, EvaluationResult
 
-
 _PROMPT = """\
 You are evaluating the quality of a RAG (retrieval-augmented generation) answer.
 
@@ -17,9 +16,9 @@ Retrieved context:
 Generated answer: {answer}
 
 Evaluate the answer on four criteria:
-1. is_grounded: Is every claim in the answer directly supported by the retrieved context? (true/false)
-2. is_complete: Does the answer fully address the question without missing key parts? (true/false)
-3. score: A float from 0.0 to 1.0 reflecting overall quality (grounded + complete = 1.0)
+1. is_grounded: Is every claim supported by the retrieved context? (true/false)
+2. is_complete: Does the answer fully address the question? (true/false)
+3. score: A float 0.0–1.0 reflecting overall quality (grounded + complete = 1.0)
 4. reason: One sentence explaining the score.
 
 Respond with valid JSON only, no markdown, no explanation:
@@ -31,8 +30,9 @@ class LLMEvaluator:
     Evaluates answers using any LLM.
 
     Args:
-        generate_fn: A callable that accepts a prompt string and returns a response string.
-                     Works with any LLM — Claude, OpenAI, local models, etc.
+        generate_fn: A callable that accepts a prompt string and returns a
+                     response string. Works with any LLM — Claude, OpenAI,
+                     local models, etc.
 
     Example::
 
